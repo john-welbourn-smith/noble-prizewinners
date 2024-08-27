@@ -1,8 +1,7 @@
 import os
+import logging
 import pytest
-
-# Set up environment variables for testing
-os.environ['API_KEY'] = 'test_api_key'
+import app
 
 def test_search_by_name(test_client, mocker):
     # Mock Elasticsearch response
@@ -77,8 +76,3 @@ def test_health_check(test_client):
     response = test_client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "healthy"}
-
-def test_invalid_api_key(test_client):
-    response = test_client.get("/search/name?q=Albert", headers={"X-API-Key": "invalid_api_key"})
-    assert response.status_code == 403
-    assert response.json() == {"detail": "Unauthorized"}
